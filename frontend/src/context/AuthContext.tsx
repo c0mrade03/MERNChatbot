@@ -1,4 +1,11 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { loginUser } from "../helpers/api-communicators";
 
 type User = {
   name: string;
@@ -14,13 +21,20 @@ type UserAuth = {
 };
 
 const AuthContext = createContext<UserAuth | null>(null);
-const AuthProvider = ({ children }: { children: ReactNode }) => {
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {}, []);
 
-  const login = async (email: string, password: string) => {};
+  const login = async (email: string, password: string) => {
+    const data = await loginUser(email, password);
+    if (data) {
+      setUser({ email: data.email, name: data.name });
+      setIsLoggedIn(true);
+    }
+  };
   const signup = async (name: string, email: string, password: string) => {};
   const logout = async () => {};
 
@@ -34,3 +48,5 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export const useAuth = () => useContext(AuthContext);

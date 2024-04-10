@@ -29,7 +29,6 @@ export const userLogin = async (
     const { email, password } = req.body;
     const user = await User.findOne({
       email,
-
     })
 
     if (!user) {
@@ -64,7 +63,7 @@ export const userLogin = async (
       signed: true,
     });
 
-    res.status(201).json({ message: "OK", id: user._id.toString() });
+    res.status(201).json({ message: "OK", name: user.name, email: user.email });
   }
   catch (error) {
     res.status(400).json({
@@ -116,8 +115,8 @@ export const userSignup = async (
       httpOnly: true,
       signed: true,
     });
-    
-    res.status(201).json({ message: "OK", id: user._id.toString() });
+
+    res.status(201).json({ message: "OK", name: user.name, email: user.email });
   }
   catch (error) {
     res.status(400).json({
